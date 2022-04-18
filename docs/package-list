@@ -1,0 +1,12 @@
+org.aiwolf.client.lib
+org.aiwolf.common
+org.aiwolf.common.bin
+org.aiwolf.common.data
+org.aiwolf.common.net
+org.aiwolf.common.util
+org.aiwolf.sample.lib
+org.aiwolf.sample.player
+org.aiwolf.server
+org.aiwolf.server.bin
+org.aiwolf.server.net
+org.aiwolf.server.util

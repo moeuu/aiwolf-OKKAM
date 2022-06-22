@@ -723,29 +723,29 @@ class SentenceTree: # 一つの文のみを処理する木
                     subj_lemma = self.id_lemma_dict[subj_idx]
                     if subj_lemma in self_term and subj_relation=="nsubj":
                         if role_lemma=="人狼" or role_lemma in black_term:
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", self.speaker, "WEREWOLF")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.speaker, "WEREWOLF")
                         elif role_lemma=="占い師":
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", self.speaker, "SEER")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.speaker, "SEER")
                         elif role_lemma=="村人":
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", self.speaker, "VILLAGER")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.speaker, "VILLAGER")
                         elif role_lemma in white_term:
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", self.speaker, "HUMAN")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.speaker, "HUMAN")
                     elif subj_lemma in you_term and subj_relation=="nsubj":
                         if role_lemma=="人狼" or role_lemma in black_term:
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", self.mention, "WEREWOLF")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.mention, "WEREWOLF")
                         elif role_lemma=="占い師":
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", self.mention, "SEER")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.mention, "SEER")
                         elif role_lemma=="村人":
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", self.mention, "VILLAGER")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.mention, "VILLAGER")
                     elif subj_lemma in player_term and subj_relation=="nsubj":
                         if role_lemma=="人狼" or role_lemma in black_term:
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", subj_lemma, "WEREWOLF")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", subj_lemma, "WEREWOLF")
                         elif role_lemma=="占い師":
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", subj_lemma, "SEER")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", subj_lemma, "SEER")
                         elif role_lemma=="村人":
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", subj_lemma, "VILLAGER")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", subj_lemma, "VILLAGER")
                         elif role_lemma in white_term:
-                            return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", subj_lemma, "HUMAN")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", subj_lemma, "HUMAN")
 
             return None
         

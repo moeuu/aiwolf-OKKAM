@@ -645,14 +645,14 @@ class SentenceTree: # 一つの文のみを処理する木
             if interrogative=="何" or interrogative=="なに" or interrogative=="どう" or interrogative=="なん":
                 obj = self.bfs(["占い","占う"], start_idx=interro_idx)
                 if obj is not None:
-                    return (self.speaker, "INQUIRE", self.mention, "DIVINED", "ANY")
+                    return (self.speaker, "INQUIRE", self.mention or "ANY", "DIVINED", "ANY")
 
             #「誰が怪しいと思う？」
             if interrogative=="誰" or interrogative=="だれ":
                 who_parent_idx = self.node_list[interro_idx].parent[0]
                 if who_parent_idx is not None:
                     if self.id_lemma_dict[who_parent_idx] in black_term:
-                        return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", "ANY", "WEREWOLF")
+                        return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", "ANY", "WEREWOLF")
 
             #「二郎の役職はなんだと思う？」「あなたの役職はなんですか？」
             if interrogative=="何" or interrogative=="なに" or interrogative=="なん":
@@ -664,10 +664,10 @@ class SentenceTree: # 一つの文のみを処理する木
                             idx_yaku, relation_yaku = self.node_list[idx].child[i]
                             yaku_lemma = self.id_lemma_dict[idx_yaku]
                             if yaku_lemma in player_term:
-                                return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", yaku_lemma, "ANY")
+                                return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", yaku_lemma, "ANY")
                             if yaku_lemma in self_term:
-                                return (self.speaker, "INQUIRE", self.mention, "ESTIMATE", self.speaker, "ANY")
-                        return (self.speaker, "INQUIRE", self.mention, "COMINGOUT")             #ここREQUESTにする？
+                                return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.speaker, "ANY")
+                        return (self.speaker, "INQUIRE", self.mention or "ANY", "COMINGOUT")             #ここREQUESTにする？
 
             #「君はどう思う？」
             if interrogative=="どう":
@@ -676,14 +676,14 @@ class SentenceTree: # 一つの文のみを処理する木
                     if self.id_lemma_dict[how_parent_idx] == "思う":
                         #○○についてどう思う？はめんどくさいので、それ以外を検出
                         if self.search_child(how_parent_idx, relation="obl") is None:
-                            return (self.speaker, "INQUIRE", self.mention, "THINK", "ANY")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "THINK", "ANY")
 
             #「誰を占うといいと思う？」
             if interrogative=="誰" or interrogative=="だれ":
                 see_parent_idx, see_relation = self.node_list[interro_idx].parent
                 see_parent_lemma = self.id_lemma_dict[see_parent_idx]
                 if see_relation=="obj" and see_parent_lemma=="占う":
-                    return (self.speaker, "INQUIRE", self.mention, "THINK", "DIVINE", "ANY")
+                    return (self.speaker, "INQUIRE", self.mention or "ANY", "THINK", "DIVINE", "ANY")
 
             #「誰に投票するつもり？」「昨日はだれに投票したの？」
             if interrogative=="誰" or interrogative=="だれ":
@@ -694,8 +694,8 @@ class SentenceTree: # 一つの文のみを処理する木
                     for i in range(len(self.node_list[vote_parent_idx].child)):
                         idx, relation = self.node_list[vote_parent_idx].child[i]
                         if self.id_lemma_dict[idx]=="た":
-                            return (self.speaker, "INQUIRE", self.mention, "VOTED", "ANY")
-                    return (self.speaker, "INQUIRE", self.mention, "VOTE", "ANY")
+                            return (self.speaker, "INQUIRE", self.mention or "ANY", "VOTED", "ANY")
+                    return (self.speaker, "INQUIRE", self.mention or "ANY", "VOTE", "ANY")
 
             return None
 

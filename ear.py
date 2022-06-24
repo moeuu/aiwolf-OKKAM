@@ -403,13 +403,13 @@ class SentenceTree: # 一つの文のみを処理する木
             obj1 = None
             if token in obj_that: #それ、とか
                 objcase = "talk"
-                obj1 = self.talknumber-1
+                obj1 = "SENTENCE" + str(self.talk_number-1)
             elif token in obj_man: #二郎、とか
                 objcase = "player"
                 obj1 = self.id_lemma_dict[id]
-            elif token.isdecimal(): #talknumber
+            elif token.isdecimal(): #talk_number
                 objcase = "talk"
-                obj1 = int(token)
+                obj1 = "SENTENCE" + str(token)
             else:
                 for i in range(len(self.node_list[id].child)):
                     idx, relation = self.node_list[id].child[i]
@@ -619,7 +619,7 @@ class SentenceTree: # 一つの文のみを処理する木
 
     def isINQUIRE(self):
 
-        #ToDoList: talknumberを統合に組み込む、processed_sentenceをselfに、mentionなしは誰向けと判断？、「誰を怪しいと思ってる？」、REQUEST候補あり、疑問詞二つは非対応、
+        #ToDoList: talk_numberを統合に組み込む、processed_sentenceをselfに、mentionなしは誰向けと判断？、「誰を怪しいと思ってる？」、REQUEST候補あり、疑問詞二つは非対応、
         # 「○○はなんだと思ってる？」がうまくいかない、「誰を占いましたか？」はDIVINE？
         #「誰に投票したらいいと思う？」がVOTEDに、わからないときは特定のエラー吐いた方がよい？
         #クラス内で自身のオブジェクト作っていいの...？自身について破壊的操作？
@@ -858,13 +858,13 @@ if __name__ == "__main__":
         "みんなは誰が怪しいと思う？",
         "今日は誰を占ったらいい？",
         ">>Agent[03] 誰に投票するつもり？",
-        ">>Agent[03] 誰が本当の占い師だと思う？"
-        # "完全に同意",
-        # "その通りだね。"
+        ">>Agent[03] 誰が本当の占い師だと思う？",
+        "完全に同意",
+        "その通りだね。"
     ]
 
     for sentence in sentence_list:
-        tree = SentenceTree(sentence, speaker="一郎")
+        tree = SentenceTree(sentence, speaker="一郎", talknumber=100)
         print(sentence)
         print(tree.analyze_sentence(), "\n")
         # for node in tree.node_list:

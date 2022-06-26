@@ -510,11 +510,11 @@ class SentenceTree: # 一つの文のみを処理する木
         # これに加え、「占って」のような「て」で終わっているのもrequestとなる
         request_aux_list = ["くれる", "もらう", "ほしい", "くださる"]
 
-        # 「て」を見つけ、そのchildが無いまたはrequest_aux_listの補助動詞なら、「て」の親をmain_verbとする
+        # 「て」を見つけ、それが文末である（後ろに「。」があるかもなのでidは末尾or末尾-1）か、そのchildがrequest_aux_listの補助動詞なら、「て」の親をmain_verbとする
         main_verb_id = None
         te_id = self.bfs(["て"])
         if te_id is not None:
-            if self.search_child(te_id, "fixed", request_aux_list) or (len(self.node_list[te_id].child) == 0):
+            if self.search_child(te_id, "fixed", request_aux_list) or (len(self.node_list) == te_id+1 or len(self.node_list) == te_id+2):
                 main_verb_id = self.node_list[te_id].parent[0]
         if main_verb_id is not None:
 
@@ -762,10 +762,10 @@ class SentenceTree: # 一つの文のみを処理する木
         result_isREQUEST = self.isREQUEST()
         result_isINQUIRE = self.isINQUIRE()
 
-        if result_isREQUEST:
-            return self.postprocessing(result_isREQUEST)
         if result_isINQUIRE:
             return self.postprocessing(result_isINQUIRE)
+        if result_isREQUEST:
+            return self.postprocessing(result_isREQUEST)
         if result_isDIVINED:
             return self.postprocessing(result_isDIVINED)
         if result_isDIVINATION:
@@ -853,12 +853,24 @@ if __name__ == "__main__":
         ">>Agent[03] Agent[04]を占ってくれ。",
         ">>Agent[03] Agent[04]を調べてほしいと思ってる。",
         ">>Agent[03] Agent[04]を占ってほしい気持ちです。",
-        ">>Agent[03] 占いの結果はどうだった？",
+        ">>Agent[03] 占いはどうだった？",
+        ">>Agent[03] 占いの結果は何？",
         ">>Agent[03] 誰が人狼だと思う？",
-        "みんなは誰が怪しいと思う？",
-        "今日は誰を占ったらいい？",
-        ">>Agent[03] 誰に投票するつもり？",
-        ">>Agent[03] 誰が本当の占い師だと思う？",
+        ">>Agent[03] 誰が占い師だと思ってる？",
+        ">>Agent[03] お前は誰が怪しい？",
+        ">>Agent[03] あなたの役職は何ですか。",
+        ">>Agent[03] 四郎の役職は何だと思う？",
+        ">>Agent[03] 俺は怪しく見える？",
+        ">>Agent[03] 君はどう思う？",
+        ">>Agent[03] 昨日は誰を占ったの？",
+        ">>Agent[03] 昨日は誰に投票した？",
+        ">>Agent[03] 今日は誰に入れればいいですか",
+        ">>Agent[03] なぜ",
+        ">>Agent[03] どうしてそう思うの？",
+        ">>Agent[03] 根拠は？",
+        ">>Agent[03] 君もそう思わない？",
+        ">>Agent[03] お前が人狼か？",
+        ">>Agent[03] 三郎が占い師ってコト!？",
         "完全に同意",
         "その通りだね。"
     ]

@@ -645,14 +645,14 @@ class SentenceTree: # 一つの文のみを処理する木
             if interrogative=="何" or interrogative=="なに" or interrogative=="どう" or interrogative=="なん":
                 obj = self.bfs(["占い","占う"], start_idx=interro_idx)
                 if obj is not None:
-                    return (self.speaker, "INQUIRE", self.mention or "ANY", "DIVINED", "ANY")
+                    return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "DIVINED", "ANY")
 
             #「誰が怪しいと思う？」
             if interrogative=="誰" or interrogative=="だれ":
                 who_parent_idx = self.node_list[interro_idx].parent[0]
                 if who_parent_idx is not None:
                     if self.id_lemma_dict[who_parent_idx] in black_term:
-                        return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", "ANY", "WEREWOLF")
+                        return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", "ANY", "WEREWOLF")
 
             #「二郎の役職はなんだと思う？」「あなたの役職はなんですか？」
             if interrogative=="何" or interrogative=="なに" or interrogative=="なん":
@@ -664,10 +664,10 @@ class SentenceTree: # 一つの文のみを処理する木
                             idx_yaku, relation_yaku = self.node_list[idx].child[i]
                             yaku_lemma = self.id_lemma_dict[idx_yaku]
                             if yaku_lemma in player_term:
-                                return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", yaku_lemma, "ANY")
+                                return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", yaku_lemma, "ANY")
                             if yaku_lemma in self_term:
-                                return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.speaker, "ANY")
-                        return (self.speaker, "INQUIRE", self.mention or "ANY", "COMINGOUT")             #ここREQUESTにする？
+                                return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", self.speaker, "ANY")
+                        return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "COMINGOUT")             #ここREQUESTにする？
 
             #「君はどう思う？」
             if interrogative=="どう":
@@ -676,14 +676,14 @@ class SentenceTree: # 一つの文のみを処理する木
                     if self.id_lemma_dict[how_parent_idx] == "思う":
                         #○○についてどう思う？はめんどくさいので、それ以外を検出
                         if self.search_child(how_parent_idx, relation="obl") is None:
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "THINK", "ANY")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "THINK", "ANY")
 
             #「誰を占うといいと思う？」
             if interrogative=="誰" or interrogative=="だれ":
                 see_parent_idx, see_relation = self.node_list[interro_idx].parent
                 see_parent_lemma = self.id_lemma_dict[see_parent_idx]
                 if see_relation=="obj" and see_parent_lemma=="占う":
-                    return (self.speaker, "INQUIRE", self.mention or "ANY", "THINK", "DIVINE", "ANY")
+                    return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "THINK", "DIVINE", "ANY")
 
             #「誰に投票するつもり？」「昨日はだれに投票したの？」
             if interrogative=="誰" or interrogative=="だれ":
@@ -694,8 +694,8 @@ class SentenceTree: # 一つの文のみを処理する木
                     for i in range(len(self.node_list[vote_parent_idx].child)):
                         idx, relation = self.node_list[vote_parent_idx].child[i]
                         if self.id_lemma_dict[idx]=="た":
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "VOTED", "ANY")
-                    return (self.speaker, "INQUIRE", self.mention or "ANY", "VOTE", "ANY")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "VOTED", "ANY")
+                    return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "VOTE", "ANY")
 
             return None
 
@@ -723,29 +723,29 @@ class SentenceTree: # 一つの文のみを処理する木
                     subj_lemma = self.id_lemma_dict[subj_idx]
                     if subj_lemma in self_term and subj_relation=="nsubj":
                         if role_lemma=="人狼" or role_lemma in black_term:
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.speaker, "WEREWOLF")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", self.speaker, "WEREWOLF")
                         elif role_lemma=="占い師":
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.speaker, "SEER")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", self.speaker, "SEER")
                         elif role_lemma=="村人":
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.speaker, "VILLAGER")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", self.speaker, "VILLAGER")
                         elif role_lemma in white_term:
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.speaker, "HUMAN")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", self.speaker, "HUMAN")
                     elif subj_lemma in you_term and subj_relation=="nsubj":
                         if role_lemma=="人狼" or role_lemma in black_term:
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.mention, "WEREWOLF")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", player_term[self.mention], "WEREWOLF")
                         elif role_lemma=="占い師":
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.mention, "SEER")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", player_term[self.mention], "SEER")
                         elif role_lemma=="村人":
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", self.mention, "VILLAGER")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", player_term[self.mention], "VILLAGER")
                     elif subj_lemma in player_term and subj_relation=="nsubj":
                         if role_lemma=="人狼" or role_lemma in black_term:
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", subj_lemma, "WEREWOLF")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", subj_lemma, "WEREWOLF")
                         elif role_lemma=="占い師":
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", subj_lemma, "SEER")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", subj_lemma, "SEER")
                         elif role_lemma=="村人":
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", subj_lemma, "VILLAGER")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", subj_lemma, "VILLAGER")
                         elif role_lemma in white_term:
-                            return (self.speaker, "INQUIRE", self.mention or "ANY", "ESTIMATE", subj_lemma, "HUMAN")
+                            return (self.speaker, "INQUIRE", player_term[self.mention] or "ANY", "ESTIMATE", subj_lemma, "HUMAN")
 
             return None
         
@@ -780,15 +780,15 @@ class SentenceTree: # 一つの文のみを処理する木
         return None
     
     def postprocessing(self, analyzed_result):
-        # 一郎、二郎…を0～4の数字に戻す関数
-        # 思考部で、プレイヤー名が数字のほうが配列とかにしやすくて楽なので
+        # 一郎、二郎…をAgent[01]～Agent[05]に戻す関数
         # ("一郎", "DIVINED", "三郎", "WEREWOLF") -> (0, "DIVINNED", 2, "WEREWOLF")
         processed = []
 
-        name_list = ["一郎", "二郎", "三郎", "四郎", "五郎"]
+        old_name_list = ["一郎", "二郎", "三郎", "四郎", "五郎"]
+        new_name_list = ["Agent[01]", "Agent[02]", "Agent[03]", "Agent[04]", "Agent[05]"]
         for word in analyzed_result:
-            if word in name_list:
-                processed.append(name_list.index(word))
+            if word in old_name_list:
+                processed.append(new_name_list[old_name_list.index(word)])
             else:
                 processed.append(word)
         return tuple(processed)
